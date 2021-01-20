@@ -30,7 +30,7 @@ def save_config():
     with open(config_path,'r+',encoding='utf8')as fp:
         fp.seek(0)
         fp.truncate()
-        str = json.dumps(config,indent=4)
+        str = json.dumps(config,indent=4,ensure_ascii=False)
         fp.write(str)
 
 async def update_cache():
