@@ -2,8 +2,8 @@
 A auto-update rank list module for hoshino   
 一个自动更新rank表的插件   
 ## 使用方法
-将本项目clone至HoshinoBot\hoshino\modules下，在__bot__.py中加入pcr-rank
-！！注意！！本插件与自带rank表指令冲突，在启用前请先修改HoshinoPath\hoshino\modules\priconne\query内的query.py和__init__.py删除有关指令及其帮助
+将本项目clone至HoshinoBot\hoshino\modules下，在__bot__.py中加入pcr-rank   
+！！注意！！本插件与自带rank表指令冲突，在启用前请先修改HoshinoPath\hoshino\modules\priconne\query内的query.py和__init__.py删除有关指令及其帮助   
 ## 指令列表
 | 指令 | 备注 |
 | ------ | ------- |
