@@ -63,15 +63,16 @@ async def download_rank_pic(url):
         pic_bytes_list.append(res_content)
     return b"".join(pic_bytes_list)
 
-async def update_rank_pic_cache():
+async def update_rank_pic_cache(force_update:bool):
     config_names = ["cn","tw","jp"]
     for conf_name in config_names:
         config_path = path.join(path.dirname(__file__),"cache",f"{conf_name}.json")
         with open(config_path,"r",encoding="utf8")as fp:
             rank_config = json.load(fp)
         for img_name in rank_config["files"]:
-            if path.exists(path.join(path.abspath(path.dirname(__file__)),"cache","pic",f"{conf_name}_{img_name}")):
-                continue
+            if not force_update:
+                if path.exists(path.join(path.abspath(path.dirname(__file__)),"cache","pic",f"{conf_name}_{img_name}")):
+                    continue
             rank_img_url = f"{server_addr}{config['source'][conf_name]['channel']}/{config['source'][conf_name]['route']}/{img_name}"
             img_content = await download_rank_pic(rank_img_url)
             with open(path.join(path.abspath(path.dirname(__file__)),"cache","pic",f"{conf_name}_{img_name}"),"ab")as fp:
@@ -79,7 +80,7 @@ async def update_rank_pic_cache():
                 fp.truncate()
                 fp.write(img_content)
 
-async def update_cache():
+async def update_cache(force_update:bool=False):
     sv.logger.info("正在更新Rank表缓存")
     config_names = ["cn","tw","jp"]
     for conf_name in config_names:
@@ -90,7 +91,7 @@ async def update_cache():
             fp.seek(0)
             fp.truncate()
             fp.write(res)
-    await update_rank_pic_cache()
+    await update_rank_pic_cache(force_update)
     sv.logger.info("Rank表缓存更新完毕")
 
 @sv.on_rex(r"^(\*?([日台国陆b])服?([前中后]*)卫?)?rank(表|推荐|指南)?$")
@@ -264,7 +265,7 @@ async def change_rank_source(bot, ev):
     config["source"][server]["channel"] = channel
     config["source"][server]["route"] = source_jo["route"]
     save_config()
-    await update_cache()
+    await update_cache(True)
     await bot.send(ev, "更新源设置成功", at_sender=True)
 
 @sv.on_fullmatch("更新rank表缓存")
