@@ -274,6 +274,7 @@ async def update_rank_cache(bot, ev):
         await load_config()
     if not check_priv(ev, SUPERUSER):
         await bot.send(ev, "仅有SUPERUSER可以使用本功能")
+        return
     await update_cache()
     await bot.send(ev, "更新成功")
 
