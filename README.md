@@ -1,6 +1,6 @@
 # pcr-rank
 A auto-update rank list module for hoshino   
-一个自动更新rank表的插件，更新源[ColdThunder11/pcr-rank_data](https://github.com/ColdThunder11/pcr-rank_data)
+一个自动更新rank表的插件，更新源[pcrbot/pcr-rank_data](https://github.com/pcrbot/pcr-rank_data)
 ## 使用方法
 将本项目clone至HoshinoBot\hoshino\modules下，在__bot__.py中加入pcr-rank   
 ！！注意！！本插件与自带rank表指令冲突，在启用前请先修改HoshinoPath\hoshino\modules\priconne\query内的query.py和__init__.py删除有关指令及其帮助   
