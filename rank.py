@@ -1,4 +1,5 @@
 import os
+import base64
 from hoshino import Service
 from hoshino.priv import *
 from hoshino import aiorequests
@@ -16,6 +17,13 @@ sv = Service("pcr-rank", help_=sv_help, bundle="pcr查询")
 server_addr = "https://pcresource.coldthunder11.com/rank/"
 resize_pic = False
 config = None
+
+def imgtobase64(path:str):
+    with open (path,'rb') as f:
+        fb = f.read()
+        img_base64 = str(base64.b64encode(fb),encoding='utf-8')
+        f.close()
+        return img_base64
 
 async def load_config():
     global config
@@ -114,15 +122,15 @@ async def rank_sheet(bot, ev):
             rank_config = json.load(fp)
         rank_imgs = []
         for img_name in rank_config["files"]:
-            rank_imgs.append(f'file:///{path.join(path.dirname(__file__),"cache","pic",f"jp_{img_name}")}')
+            rank_imgs.append(f'{path.join(path.dirname(__file__),"cache","pic",f"jp_{img_name}")}')
         msg.append(rank_config["notice"])
         pos = match.group(3)
         if not pos or "前" in pos:
-            msg.append(f"[CQ:image,file={rank_imgs[0]}]")
+            msg.append(f"[CQ:image,file=base64://{imgtobase64(rank_imgs[0])}]")
         if not pos or "中" in pos:
-            msg.append(f"[CQ:image,file={rank_imgs[1]}]")
+            msg.append(f"[CQ:image,file=base64://{imgtobase64(rank_imgs[1])}]")
         if not pos or "后" in pos:
-            msg.append(f"[CQ:image,file={rank_imgs[2]}]")
+            msg.append(f"[CQ:image,file=base64://{imgtobase64(rank_imgs[2])}]")
         await bot.send(ev, "".join(msg), at_sender=True)
     elif is_tw:
         rank_config_path = path.join(path.abspath(path.dirname(__file__)),"cache","tw.json")
@@ -131,10 +139,11 @@ async def rank_sheet(bot, ev):
             rank_config = json.load(fp)
         rank_imgs = []
         for img_name in rank_config["files"]:
-            rank_imgs.append(f'file:///{path.join(path.dirname(__file__),"cache","pic",f"tw_{img_name}")}')
+            rank_imgs.append(f'{path.join(path.dirname(__file__),"cache","pic",f"tw_{img_name}")}')
         msg.append(rank_config["notice"])
         for rank_img in rank_imgs:
-            msg.append(f"[CQ:image,file={rank_img}]")
+            b64 = imgtobase64(rank_img)
+            msg.append(f"[CQ:image,file=base64://{b64}]")
         await bot.send(ev, "".join(msg), at_sender=True)
     elif is_cn:
         rank_config_path = path.join(path.abspath(path.dirname(__file__)),"cache","cn.json")
@@ -143,10 +152,11 @@ async def rank_sheet(bot, ev):
             rank_config = json.load(fp)
         rank_imgs = []
         for img_name in rank_config["files"]:
-            rank_imgs.append(f'file:///{path.join(path.dirname(__file__),"cache","pic",f"cn_{img_name}")}')
+            rank_imgs.append(f'{path.join(path.dirname(__file__),"cache","pic",f"cn_{img_name}")}')
         msg.append(rank_config["notice"])
         for rank_img in rank_imgs:
-            msg.append(f"[CQ:image,file={rank_img}]")
+            b64 = imgtobase64(rank_img)
+            msg.append(f"[CQ:image,file=base64://{b64}]")
         await bot.send(ev, "".join(msg), at_sender=True)
 
 @sv.on_fullmatch("查看当前rank更新源")
